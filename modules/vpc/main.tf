@@ -10,7 +10,7 @@ resource "aws_vpc" "PR-TEST-VPC" {
   instance_tenancy     = "default"
 
   tags = {
-    "Name" = merge(var.global_tags, var.aws_vpc_name)
+    "Name" = merge(var.global_tags, "VPC")
   }
 }
 
@@ -38,7 +38,7 @@ resource "aws_subnet" "PR-TEST-PRISUB" {
   vpc_id            = aws_vpc.PR-TEST-VPC.id
   availability_zone = var.aws_azs[count.index]
   tags = {
-    "Name" = "private${count.index + 1}"
+    "Name" =  merge(var.global_tags, "private${count.index + 1}")
     "kubernetes.io/role/internal-elb"= 1
   }
 }
@@ -48,7 +48,7 @@ resource "aws_internet_gateway" "PR-TEST-IGW" {
   vpc_id = aws_vpc.PR-TEST-VPC.id
 
   tags = {
-    "Name" = merge(var.global_tags, var.aws_igw_name)
+    "Name" = merge(var.global_tags, "IGW")
   }
 }
 
@@ -65,7 +65,7 @@ resource "aws_nat_gateway" "PR-TEST-NG" {
   subnet_id     = element(aws_subnet.PR-TEST-PUBSUB.*.id, count.index)
 
   tags = {
-    "Name" = merge(var.global_tags, var.aws_nat_gw_name)
+    "Name" = merge(var.global_tags, "Nat-Gateway")
   }
 
   depends_on = [
@@ -87,7 +87,7 @@ resource "aws_route_table" "PR-TEST-PUBROUTE" {
   }
 
   tags = {
-    "Name" = merge(var.global_tags, aws_public_route_table_name)
+    "Name" = merge(var.global_tags, "Public-Route-Table")
   }
 }
 # Create Private Route Table !!!
@@ -101,7 +101,7 @@ resource "aws_route_table" "PR-TEST-PRIROUTE" {
   }
 
   tags = {
-    "Name" = merge(var.global_tags, var.aws_private_route_table_name)
+    "Name" = merge(var.global_tags, "Private-Route-Table")
   }
 }
 

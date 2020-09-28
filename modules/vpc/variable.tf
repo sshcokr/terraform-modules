@@ -44,37 +44,8 @@ POLICY
 
 }
 
-# Naming
+# tags
 variable "global_tags" {
   description = "리소스 맨앞에 붙는 이름을 정의"
 }
-
-
-
-variable "aws_vpc_name" {
-  description = "VPC의 이름을 정의"
-  default = "VPC"
-}
-
-variable "aws_igw_name" {
-  description = "IGW의 이름을 정의"
-  default = "IGW"
-}
-
-variable "aws_nat_gw_name" {
-  description = "Nat Gateway의 이름을 정의"
-  default = "Nat-Gateway"
-}
-
-variable "aws_public_route_table_name" {
-  description = "퍼블릭 라우트 테이블의 이름을 정의"
-  default = "Public-Route-Table"
-}
-
-variable "aws_private_route_table_name" {
-  description = "프라이빗 라우트 테이블의 이름을 정의"
-  default = "Private-Route-Table"
-}
-
-
 
