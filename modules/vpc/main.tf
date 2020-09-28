@@ -9,10 +9,10 @@ resource "aws_vpc" "PR-TEST-VPC" {
   enable_dns_support   = true
   instance_tenancy     = "default"
 
-  tags = merge(var.global_tags,
+  tags =
   {
-    "Name" = var.aws_vpc_name
-  })
+    "Name" = merge(var.global_tags, var.aws_vpc_name)
+  }
 }
 
 
@@ -26,11 +26,11 @@ resource "aws_subnet" "PR-TEST-PUBSUB" {
   map_public_ip_on_launch = true
 
   availability_zone = var.aws_azs[count.index]
-  tags = merge(var.global_tags,
+  tags =
   {
-    "Name" = "public${count.index + 1}"
+    "Name" = merge(var.global_tags, "public${count.index + 1}")
     "kubernetes.io/role/elb"= 1
-  })
+  }
 }
 
 # Create Private Subnet
@@ -39,25 +39,23 @@ resource "aws_subnet" "PR-TEST-PRISUB" {
   cidr_block        = var.aws_private_subnets[count.index]
   vpc_id            = aws_vpc.PR-TEST-VPC.id
   availability_zone = var.aws_azs[count.index]
-  tags = merge(var.global_tags,
+  tags =
   {
     "Name" = "private${count.index + 1}"
     "kubernetes.io/role/internal-elb"= 1
-  })
+  }
 }
-
 
 # Create IGW
 resource "aws_internet_gateway" "PR-TEST-IGW" {
   vpc_id = aws_vpc.PR-TEST-VPC.id
 
-  tags = merge(var.global_tags,
+  tags =
   {
-    "Name" = var.aws_igw_name
-  })
+    "Name" = merge(var.global_tags, var.aws_igw_name)
+  }
 }
 
-#
 # Create EIP for Nat Gateway
 resource "aws_eip" "EIP" {
   count = length(var.aws_azs)
@@ -70,10 +68,10 @@ resource "aws_nat_gateway" "PR-TEST-NG" {
   allocation_id = element(aws_eip.EIP.*.id, count.index)
   subnet_id     = element(aws_subnet.PR-TEST-PUBSUB.*.id, count.index)
 
-  tags = merge(var.global_tags,
+  tags =
   {
-    "Name" = var.aws_nat_gw_name
-  })
+    "Name" = merge(var.global_tags, var.aws_nat_gw_name)
+  }
 
   depends_on = [
     aws_internet_gateway.PR-TEST-IGW,
@@ -93,10 +91,10 @@ resource "aws_route_table" "PR-TEST-PUBROUTE" {
     gateway_id = aws_internet_gateway.PR-TEST-IGW.id
   }
 
-  tags = merge(var.global_tags,
+  tags =
   {
-    "Name" = var.aws_public_route_table_name
-  })
+    "Name" = merge(var.global_tags, aws_public_route_table_name)
+  }
 }
 # Create Private Route Table !!!
 resource "aws_route_table" "PR-TEST-PRIROUTE" {
@@ -108,10 +106,10 @@ resource "aws_route_table" "PR-TEST-PRIROUTE" {
     nat_gateway_id = aws_nat_gateway.PR-TEST-NG.*.id[count.index]
   }
 
-  tags = merge(var.global_tags,
+  tags =
   {
-    "Name" = var.aws_private_route_table_name
-  })
+    "Name" = merge(var.global_tags, var.aws_private_route_table_name)
+  }
 }
 
 
