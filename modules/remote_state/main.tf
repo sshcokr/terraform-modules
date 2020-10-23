@@ -19,3 +19,14 @@ resource "aws_dynamodb_table" "tfstate_lock" {
     type = "S"
   }
 }
+
+
+ # Set Backend
+ terraform {
+   backend "s3" {
+     bucket = var.bucket_name
+     key = "${var.remote_state_path}/terraform.tfstate"
+     region = "ap-northeast-2"
+     encrypt = true
+   }
+ }
