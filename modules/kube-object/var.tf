@@ -42,6 +42,7 @@ variable "grafana-path" {
 }
 variable "datadog-path" {
   description = "Input the path to datadog' values.yaml here"
+  default = ""
 }
 variable "datadog-apikey" {
   description = "Input Your Datadog's APIKeys"
