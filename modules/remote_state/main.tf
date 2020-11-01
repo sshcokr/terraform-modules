@@ -1,6 +1,6 @@
  # S3 Bucket for backend
 resource "aws_s3_bucket" "tfstate" {
-  bucket = "${var.bucket_name}-seoul-tfstate"
+  bucket = "${var.bucket_name}"
 
   versioning {
     enabled = true
